@@ -1,1 +1,1 @@
-grease-monkey is a VM temoplate base on dedian testing
+grease-monkey is a VM temoplate base on debian testing
