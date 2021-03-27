@@ -10,4 +10,4 @@ designed from [cPodFactory](https://github.com/bdereims/cPodFactory) experiences
 simple and pragmatic in its approach.
 
 Toplogy accross several deployments is pretty simple: \
-```[station].[station-zone].cloud-garage.net```
+```[garage].[garage-zone].cloud-garage.net```
