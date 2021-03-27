@@ -17,6 +17,7 @@ cp sshd_config /etc/ssh/.
 systemctl restart sshd
 
 cp bashrc ~/.bashrc
+cp vimrc ~/.vimrc
 
 cp extend-rootfs.sh generate-machine-id.sh ~/.
 
