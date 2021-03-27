@@ -6,8 +6,8 @@
 ```
 
 cloud-garage is a project to run nested sddc. \
-it's designed from [cPodFactory](https://github.com/bdereims/cPodFactory) experiences. \
-simple and stay stupid in its approach.
+designed from [cPodFactory](https://github.com/bdereims/cPodFactory) experiences. \
+simple and pragmatic in its approach.
 
 Toplogy accross several deployments is pretty simple: \
 ```[station].[station-zone].cloud-garage.net```
