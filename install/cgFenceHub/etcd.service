@@ -14,7 +14,8 @@ Type=notify
 User=etcd
 PermissionsStartOnly=true
 #ExecStart=/bin/sh -c "GOMAXPROCS=$(nproc) /usr/bin/etcd $DAEMON_ARGS"
-ExecStart=/usr/bin/etcd --name ${HOSTNAME} --discovery-srv cloud-garage.net --initial-advertise-peer-urls http://${HOSTNAME}.cloud-garage.net:2380 --initial-cluster-token cg-etcd-cluster --initial-cluster-state new --advertise-client-urls http://${HOSTNAME}.cloud-garage.net:2379 --listen-client-urls http://0.0.0.0:2379 --listen-peer-urls http://0.0.0.0:2380
+ExecStart=/usr/bin/etcd --name ${HOSTNAME} --discovery-srv ${DOMAINNAME} --initial-advertise-peer-urls http://${HOSTNAME}.${DOMAINNAME}:2380 --initial-cluster-token cg-etcd-cluster --initial-cluster-state new --advertise-client-urls http://${HOSTNAME}.${DOMAINNAME}:2379 --listen-client-urls http://0.0.0.0:2379 --listen-peer-urls http://0.0.0.0:2380
+#ExecStart=/usr/bin/etcd --name ${HOSTNAME}.${DOMAINNAME} --auto-tls --peer-auto-tls --discovery-srv ${DOMAINNAME} --initial-advertise-peer-urls https://${HOSTNAME}.${DOMAINNAME}:2380 --initial-cluster-token etcd-cluster --initial-cluster-state new --advertise-client-urls https://${HOSTNAME}.${DOMAINNAME}:2379 --listen-client-urls https://0.0.0.0:2379 --listen-peer-urls https://0.0.0.0:2380
 Restart=on-abnormal
 #RestartSec=10s
 LimitNOFILE=65536
