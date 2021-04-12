@@ -1,7 +1,10 @@
 #!/bin/bash
 #bdereims@gmail.com | cloud-garage project
-#configure after creation of grease-monkey template
+#configure just after creation of grease-monkey template, validated for debian stable
 #launch under root account
+
+echo "=== Bootstaping grease-nomkey jumpox"
+echo ""
 
 if [ "$EUID" -ne 0 ]
   then echo "Please run as root"
@@ -9,7 +12,7 @@ if [ "$EUID" -ne 0 ]
 fi
 
 apt update && apt -y upgrade
-apt install -y vim 
+apt install -y vim sudo open-vm-tools
 
 mkdir ~/.ssh
 cp authorized_keys ~/.ssh/.
@@ -28,3 +31,6 @@ sysctl -p
 ./generate-motd.sh > /etc/motd
 cp /dev/null /etc/issue
 cp /dev/null /etc/issue.net
+
+usermod -a -G sudo grease-monkey
+sed -i "s/%sudo\tALL=(ALL:ALL) ALL/%sudo\tALL=(ALL:ALL) NOPASSWD:ALL/" /etc/sudoers
