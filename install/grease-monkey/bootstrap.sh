@@ -18,6 +18,7 @@ systemctl restart sshd
 
 cp bashrc ~/.bashrc
 cp vimrc ~/.vimrc
+cp blacklist.conf /etc/modprobe.d/.
 
 cp extend-rootfs.sh generate-machine-id.sh ~/.
 
