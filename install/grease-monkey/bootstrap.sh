@@ -12,7 +12,7 @@ if [ "$EUID" -ne 0 ]
 fi
 
 apt update && apt -y upgrade
-apt install -y vim sudo open-vm-tools
+apt install -y vim sudo open-vm-tools ntpd
 
 mkdir ~/.ssh
 cp authorized_keys ~/.ssh/.
@@ -34,3 +34,8 @@ cp /dev/null /etc/issue.net
 
 usermod -a -G sudo grease-monkey
 sed -i "s/%sudo\tALL=(ALL:ALL) ALL/%sudo\tALL=(ALL:ALL) NOPASSWD:ALL/" /etc/sudoers
+
+cp startup.sh ~/.
+cp startup.service /etc/systemctl/system/.
+systemctl daemon-reload
+systemctl enable startup.service

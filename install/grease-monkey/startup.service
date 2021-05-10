@@ -1,0 +1,13 @@
+[Unit]
+Description=Cloud Garage Startup Service
+After=network.target auditd.service open-vm-tools.service
+ConditionPathExists=!/etc/no_startup
+
+[Service]
+Type=oneshot
+TimeoutSec=0
+ExecStart=/root/startup.sh
+
+[Install]
+WantedBy=multi-user.target
+Alias=startup.service
