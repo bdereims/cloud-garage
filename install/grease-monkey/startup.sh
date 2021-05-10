@@ -29,7 +29,7 @@ context() {
 }
 
 set_hostname() {
-	if [ ${TYPE} == "Linux" ]; then
+	if [ ${TYPE} == "Debian" ]; then
 		HOSTNAME=$( echo ${FQDN} | sed -e "s/\..*$//" )
 		hostname ${HOSTNAME}
 		echo ${HOSTNAME} > /etc/hostname
@@ -46,11 +46,12 @@ set_auth_key() {
 }	
 
 set_vnic() {
-	if [ "${1}" != "" ]; then
+	IP=$( echo ${1} | sed -e "s/^.*://" )
+
+	if [ "${IP}" != "" ]; then
         	case ${TYPE} in
 			"Debian")
 				INTERFACE=$( echo ${1} | sed -e "s/:.*$//" )
-				IP=$( echo ${1} | sed -e "s/^.*://" )
 
 				ifdown ${INTERFACE}
 				ip a add ${IP} dev ${INTERFACE}
@@ -65,13 +66,10 @@ set_vnic() {
 }
 
 set_dns() {
-	 if [ "${1}" != "" ]; then
+	 if [ "${IP1}" != "" ]; then
                 case ${TYPE} in
                         "Debian")
-                                INTERFACE=$( echo ${1} | sed -e "s/:.*$//" )
-                                IP=$( echo ${1} | sed -e "s/^.*://" )
-
-                                GW=$( echo "${IP}" | sed -e "s/\/.*$//" |  sed 's!^.*/!!' | sed 's/\.[0-9]*$//' )
+                                GW=$( echo "${IP1}" | sed -e "s/\/.*$//" |  sed 's!^.*/!!' | sed 's/\.[0-9]*$//' )
                                 GW="${GW}.1"
 				DOMAIN=$( echo ${FQDN} |  cut -f2- -d. )
 
@@ -83,7 +81,7 @@ set_dns() {
 }
 
 set_ntp() {
-         if [ "${1}" != "" ]; then
+         if [ "${IP1}" != "" ]; then
                 case ${TYPE} in
                         "Debian")
                                 INTERFACE=$( echo ${1} | sed -e "s/:.*$//" )
