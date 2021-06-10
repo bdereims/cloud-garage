@@ -6,6 +6,7 @@
 DEBUG="${1}"
 TYPE="Debian"
 #TYPE="ESX"
+OVFENV=/tmp/$$
 
 debug() {
 	[ "${DEBUG}" == "debug" ] && echo ">>> ${1}" >&2
@@ -13,19 +14,23 @@ debug() {
 
 retrieve() {
 	#${1}: name of variable
-	VAL=$( vmtoolsd --cmd 'info-get guestinfo.ovfEnv' | grep ${1} | sed -e "s/^.*value=\"//" -e "s/\".*$//" )
+	VAL=$( cat ${OVFENV} | grep ${1} | sed -e "s/^.*value=\"//" -e "s/\".*$//" )
 	debug "retrieve ${1}: ${VAL}"
 	echo "${VAL}"
 }
 
 context() {
-	IP1=$( retrieve en1 )
-	IP2=$( retrieve en2 )
-	IP3=$( retrieve en3 )
-	ASN=$( retrieve asn )
-	PASSWORD=$( retrieve password )
-	FQDN=$( retrieve fqdn )
+	EN1=$( retrieve EN1 )
+	GW1=$( retrieve GW1 )
+	EN2=$( retrieve EN2 )
+	GW2=$( retrieve GW2 )
+	EN3=$( retrieve EN3 )
+	GW3=$( retrieve GW3 )
+	ASN=$( retrieve ASN )
+	PASSWORD=$( retrieve passwd )
+	FQDN=$( retrieve FQDN )
 	AUTH_KEY=$( retrieve authorized_key )
+	DNS=$( retrieve DNS )
 }
 
 set_hostname() {
@@ -46,38 +51,35 @@ set_auth_key() {
 }	
 
 set_vnic() {
-	IP=$( echo ${1} | sed -e "s/^.*://" )
+	INTERFACE=$( echo ${1} | cut -d: -f1 )
+	IP=$( echo ${1} | cut -d: -f2 )
+	GW=$( echo ${1} | cut -d: -f3 )
 
 	if [ "${IP}" != "" ]; then
         	case ${TYPE} in
 			"Debian")
-				INTERFACE=$( echo ${1} | sed -e "s/:.*$//" )
-
 				ifdown ${INTERFACE}
 				ip a add ${IP} dev ${INTERFACE}
 				ip link set up ${INTERFACE}
 
-				GW=$( echo "${IP}" | sed -e "s/\/.*$//" |  sed 's!^.*/!!' | sed 's/\.[0-9]*$//' )
-				GW="${GW}.1"
+				#GW=$( echo "${IP}" | sed -e "s/\/.*$//" |  sed 's!^.*/!!' | sed 's/\.[0-9]*$//' )
+				#GW="${GW}.1"
 				ip route add default via ${GW}
-                        	;;
+            	;;
         	esac
 	fi
 }
 
 set_dns() {
-	 if [ "${IP1}" != "" ]; then
-                case ${TYPE} in
-                        "Debian")
-                                GW=$( echo "${IP1}" | sed -e "s/\/.*$//" |  sed 's!^.*/!!' | sed 's/\.[0-9]*$//' )
-                                GW="${GW}.1"
+	if [ "${EN1}" != "" ]; then
+		case ${TYPE} in
+        	"Debian")
 				DOMAIN=$( echo ${FQDN} |  cut -f2- -d. )
-
-                                echo "nameserver ${GW}" > /etc/resolv.conf
+                echo "nameserver ${DNS}" > /etc/resolv.conf
 				echo "search ${DOMAIN}" >> /etc/resolv.conf
-                                ;;
-                esac
-        fi
+                ;;
+        esac
+	fi
 }
 
 set_ntp() {
@@ -106,12 +108,15 @@ set_password() {
 }
 
 main() {
-	context
+	vmtoolsd --cmd 'info-get guestinfo.ovfEnv' > ${OVFENV} 
+
+	context 
 	set_hostname
 	set_auth_key
-	set_vnic ens192:${IP1}
-	set_dns ens192:${IP1}
+	set_vnic ens192:${EN1}:${GW1}
+	set_dns 
 	set_password
+	rm ${OVFENV} 
 }
 
 main

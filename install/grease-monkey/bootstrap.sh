@@ -39,6 +39,6 @@ usermod -a -G sudo grease-monkey
 sed -i "s/%sudo\tALL=(ALL:ALL) ALL/%sudo\tALL=(ALL:ALL) NOPASSWD:ALL/" /etc/sudoers
 
 cp startup.sh ~/.
-cp startup.service /etc/systemctl/system/.
+cp startup.service /etc/systemd/system/.
 systemctl daemon-reload
 systemctl enable startup.service
