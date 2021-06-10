@@ -12,7 +12,7 @@ if [ "$EUID" -ne 0 ]
 fi
 
 apt update && apt -y upgrade
-apt install -y vim sudo open-vm-tools ntpd
+apt install -y vim sudo open-vm-tools ntpd bash-completion
 
 mkdir ~/.ssh
 cp authorized_keys ~/.ssh/.
@@ -22,6 +22,9 @@ systemctl restart sshd
 cp bashrc ~/.bashrc
 cp vimrc ~/.vimrc
 cp blacklist.conf /etc/modprobe.d/.
+
+cp proxy.sh ~/.
+cp docker.service-proxy ~/.
 
 cp extend-rootfs.sh generate-machine-id.sh ~/.
 
