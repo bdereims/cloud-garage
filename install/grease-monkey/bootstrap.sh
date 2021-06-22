@@ -20,7 +20,7 @@ cp sshd_config /etc/ssh/.
 systemctl restart sshd
 
 cp bashrc ~/.bashrc
-cp vimrc ~/.vimrc
+cat vimrc >> /etc/vim/vimrc.local 
 cp blacklist.conf /etc/modprobe.d/.
 
 cp proxy.sh ~/.

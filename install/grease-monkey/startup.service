@@ -10,4 +10,5 @@ ExecStart=/root/startup.sh
 
 [Install]
 WantedBy=multi-user.target
+Requires=open-vm-tools.service
 Alias=startup.service
