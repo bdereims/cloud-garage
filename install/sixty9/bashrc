@@ -17,11 +17,11 @@
 # alias cp='cp -i'
 # alias mv='mv -i'
 
-alias vi="vim"
+#alias vi="vim"
 #alias ls="ls --color=tty"
-export LS_OPTIONS='--color=auto'
-eval "`dircolors`"
-alias ls='ls $LS_OPTIONS'
+#export LS_OPTIONS='--color=auto'
+#eval "`dircolors`"
+#alias ls='ls $LS_OPTIONS'
 export EDITOR=vi
-export LC_ALL="en_US.UTF-8"
-export PATH=$PATH:/usr/local/go/bin
+#export LC_ALL="en_US.UTF-8"
+#export PATH=$PATH:/usr/local/go/bin

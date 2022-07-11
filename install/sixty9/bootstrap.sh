@@ -1,7 +1,7 @@
 #!/bin/bash
 #bdereims@gmail.com | cloud-garage project
 #configure just after creation of sixty9 template, validated for debian stable
-#launch under root account
+#launch with root account
 
 echo "=== Bootstaping sixty9 jumpox"
 echo ""
@@ -12,7 +12,10 @@ if [ "$EUID" -ne 0 ]
 fi
 
 apt update && apt -y upgrade
-apt install -y vim sudo open-vm-tools ntp bash-completion sudo
+apt install -y vim sudo ntp bash-completion sudo
+
+#optional
+#apt install -y open-vm-tools
 
 mkdir ~/.ssh
 cp authorized_keys ~/.ssh/.

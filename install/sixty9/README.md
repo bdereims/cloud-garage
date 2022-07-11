@@ -1,1 +1,1 @@
-sixty9 is VM template based on debian 11
+sixty9 is VM template based on ubuntu lts

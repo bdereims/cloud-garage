@@ -5,9 +5,6 @@
                                     |___/                    |___/        
 ```
 
-cloud-garage is a project to run nested sddc. \
-designed from [cPodFactory](https://github.com/bdereims/cPodFactory) experiences. \
-simple and pragmatic on its approach.
+"cloud-garage" is a project to get and prepare bunch of tools for cloud experimentations. \
+simple and pragmatic on its approach. \
 
-Toplogy accross several deployments is pretty simple: \
-```[garage].[garage-zone].cloud-garage.net```

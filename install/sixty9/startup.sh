@@ -3,6 +3,8 @@
 #start vm with ovf specs 
 #$1: debug for log
 
+exit 0
+
 DEBUG="${1}"
 TYPE="Debian"
 #TYPE="ESX"
