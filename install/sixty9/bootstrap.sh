@@ -35,19 +35,26 @@ lsb_release -d | grep Ubuntu
 
 # install some tools from repo
 apt update && apt -y upgrade
-apt install -y vim sudo ntp bash-completion sudo jq curl sshpass unzip bash-completion tmux iputils-ping
+apt install -y vim sudo ntp bash-completion sudo jq curl sshpass unzip bash-completion tmux iputils-ping wireguard
 
 # optional if running withio vmware
 #apt install -y open-vm-tools
+
+# copy wiregaurd files
+cp wireguard-start.sh ~/.
+PRIVATE_KEY=$( wg genkey )
+cat wireguard.conf | sed -e "s/###PRIVATE-KEY###/${PRIVATE_KEY}/" > /etc/wireguard.conf
 
 # disable fancy login message 
 chmod -x /etc/update-motd.d/*
 
 # update ssh key and configure sshd with socks tunnel
 mkdir ~/.ssh
+echo "y" | ssh-keygen -q -b 4096 -t rsa -f ~/.ssh/id_rsa -q -N ""
 cp authorized_keys ~/.ssh/.
 mkdir -p /home/${VMUSER}/.ssh
 cp authorized_keys /home/${VMUSER}/.ssh/.
+cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
 chown -R ${VMUSER}:${VMUSER} /home/${VMUSER}/.ssh
 cp sshd_config /etc/ssh/.
 systemctl restart sshd
