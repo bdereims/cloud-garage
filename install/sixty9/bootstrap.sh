@@ -35,7 +35,7 @@ lsb_release -d | grep Ubuntu
 
 # install some tools from repo
 apt update && apt -y upgrade
-apt install -y vim sudo ntp bash-completion sudo jq curl sshpass unzip bash-completion tmux iputils-ping wireguard
+apt install -y vim sudo ntp bash-completion sudo jq curl sshpass unzip bash-completion tmux iputils-ping wireguard dnsmasq
 
 # optional if running withio vmware
 #apt install -y open-vm-tools
@@ -44,6 +44,13 @@ apt install -y vim sudo ntp bash-completion sudo jq curl sshpass unzip bash-comp
 cp wireguard-start.sh ~/.
 PRIVATE_KEY=$( wg genkey )
 cat wireguard.conf | sed -e "s/###PRIVATE-KEY###/${PRIVATE_KEY}/" > /etc/wireguard.conf
+
+# configure dnsmasq
+cp dnsmasq.conf /etc/.
+systemctl stop systemd-resolved
+systemctl disable systemd-resolved
+systemctl enable dnsmasq
+systemctl start dnsmasq
 
 # disable fancy login message 
 chmod -x /etc/update-motd.d/*
