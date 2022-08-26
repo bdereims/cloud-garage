@@ -28,10 +28,13 @@ if [ "$EUID" -ne 0 ]
 fi
 
 # create user if does not exist
-useradd -m /bin/bash ${VMUSER} 
+useradd -m -s /bin/bash ${VMUSER} 
+usermod -a -G sudo ${VMUSER}
+cp -R /home/ubuntu/.??* /home/${VMUSER}
+chown -R ${VMUSER}:${VMUSER} /home/${VMUSER}
 
 # only for ubuntu
-lsb_release -d | grep Ubuntu
+lsb_release -d | grep Ubuntu || exit 1
 
 # install some tools from repo
 apt update && apt -y upgrade
@@ -146,3 +149,6 @@ install-docker () {
 
 # install ansible
 [ ${ANSIBLE} == "YES" ] && apt install -y ansible
+
+# install pulumi
+curl -fsSL https://get.pulumi.com | sh

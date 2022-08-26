@@ -3,8 +3,11 @@
 #start vm with ovf specs 
 #$1: debug for log
 
+/root/wireguard-start.sh
+
 exit 0
 
+### Only for vSphere
 DEBUG="${1}"
 TYPE="Debian"
 #TYPE="ESX"

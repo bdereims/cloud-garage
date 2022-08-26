@@ -1,5 +1,4 @@
 #!/bin/bash
-#!/bin/bash
 #bdereims@gmail.com | cloud-garage project
 
 ### WireGuard
@@ -11,7 +10,8 @@ wg setconf wg0 /etc/wireguard.conf
 ip link set up dev wg0
 
 ### Firewall
-INGRESS=ens3
+#INGRESS=ens3
+INGRESS=$( ip -br -4 a sh | grep $( ip route  | grep default | awk '{print $9}' ) | awk '{print $1}' )
 
 iptables -P INPUT   DROP
 iptables -P FORWARD DROP
