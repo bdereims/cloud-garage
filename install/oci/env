@@ -1,0 +1,10 @@
+export COMP_NAME_ROOT=nvidia_poc
+export COMP_NAME=cloudgarage
+export VCN_NAME=cloudgarage
+export VCN_CIDR=10.0.0.0/16
+export SNET_PUBLIC_NAME=public
+export SNET_PUBLIC_CIDR=10.0.0.0/24
+export SNET_PRIVATE_NAME=private
+export SNET_PRIVATE_CIDR=10.0.1.0/24
+
+export COMP_ID_ROOT=$( oci iam compartment list --compartment-id-in-subtree true --all | jq '.["data"] | .[] | select(."name" == "'${COMP_NAME_ROOT}'") | .id' | sed -e "s/\"//g" )
