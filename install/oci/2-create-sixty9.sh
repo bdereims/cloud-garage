@@ -9,8 +9,10 @@ COMP_ID=$( oci iam compartment list --compartment-id-in-subtree true --all | jq 
 SBNT_PUBLIC_ID=$(oci network subnet list -c ${COMP_ID} --display-name public | jq '.[] | .[] | .id' | sed -e "s/\"//g" )
 AVAIL_DOMAIN=$( oci iam availability-domain list --compartment-id ${COMP_ID} | jq '.data | .[0] | .name' | sed -e "s/\"//g" )
 #SHAPE_NAME=$( oci compute shape list --availability-domain "VXpT:US-ASHBURN-AD-1" --compartment-id ${COMP_ID} | jq '.data | [.[] | select(.shape | startswith("VM."))] | .[0] | .shape' )
-SHAPE_NAME="VM.Standard.E2.4"
+SHAPE_NAME="VM.Standard.E4.Flex"
 VM_NAME=sixty9
+
+# Ubuntu 22.04 LTS minimal
 IMAGE_ID=ocid1.image.oc1.iad.aaaaaaaa2uqsnlxswtgp7ebqfqxi6jvwulu6vzzznbyqc5ywx7fdbzqkz5ya
 
 echo "Launching new instance..."
@@ -22,6 +24,7 @@ INSTANCE_ID=$( oci compute instance launch \
 --shape ${SHAPE_NAME} \
 --ssh-authorized-keys-file "/home/sixty9/.ssh/id_rsa.pub" \
 --subnet-id ${SBNT_PUBLIC_ID} \
+--shape-config file://sixty9-shape.json \
 --wait-for-state "RUNNING" 2> /dev/null | jq '.data | .id' | sed -e "s/\"//g" )
 
 PUBLIC_IP=$( oci compute instance list-vnics --instance-id ${INSTANCE_ID} | jq '.data | .[] | ."public-ip"' | sed -e "s/\"//g" )
@@ -39,3 +42,5 @@ done
 ssh -o BatchMode=yes -o StrictHostKeyChecking=no ubuntu@${PUBLIC_IP} "sudo apt-get update && sudo apt-get install -y git && git clone https://github.com/bdereims/cloud-garage && cd cloud-garage/install/sixty9 && sudo ./bootstrap.sh"
 
 echo "Sixty9 Public IP: ${PUBLIC_IP}"
+echo "Enjoy!"
+

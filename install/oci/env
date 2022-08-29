@@ -1,7 +1,7 @@
 export COMP_NAME_ROOT=nvidia_poc
-export COMP_NAME=cloudgarage
+export COMP_NAME=brice
 export VCN_NAME=cloudgarage
-export VCN_CIDR=10.0.0.0/16
+export VCN_CIDR=10.0.0.0/20
 export SNET_PUBLIC_NAME=public
 export SNET_PUBLIC_CIDR=10.0.0.0/24
 export SNET_PRIVATE_NAME=private
