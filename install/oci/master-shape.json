@@ -1,0 +1,13 @@
+{
+	"baseline-ocpu-utilization": null,
+	"gpu-description": null,
+	"gpus": 0,
+	"local-disk-description": null,
+	"local-disks": 0,
+	"local-disks-total-size-in-gbs": null,
+	"max-vnic-attachments": 2,
+	"memory-in-gbs": 16,
+	"networking-bandwidth-in-gbps": 1,
+	"ocpus": 4,
+	"processor-description": "2.55 GHz AMD EPYC™ 7J13 (Milan)"
+}

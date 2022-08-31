@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash 
 #bdereims@gmail.com | cloud-garage project
 #create and configute vcn
 
