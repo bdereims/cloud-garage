@@ -44,7 +44,7 @@ done
 sleep 20
 
 # configure sixty9
-ssh -o BatchMode=yes -o StrictHostKeyChecking=no ubuntu@${PUBLIC_IP} "sudo apt-get update && sudo apt-get install -y git && git clone https://github.com/bdereims/cloud-garage && cd cloud-garage/install/oci/node && sudo bash -x bootsrap.sh > install.log"
+ssh -o BatchMode=yes -o StrictHostKeyChecking=no ubuntu@${PUBLIC_IP} "sudo apt-get update && sudo apt-get install -y git && git clone https://github.com/bdereims/cloud-garage && cd cloud-garage/install/oci/node && sudo bash -x bootstrap.sh > install.log"
 
 echo "New Instance Public IP: ${PUBLIC_IP}"
 
@@ -54,8 +54,8 @@ echo "New Instance Public IP: ${PUBLIC_IP}"
 for (( C=1; C<=${NUM_NODES_VM}; C++ ))
 do
 	if [ ${C} -le ${NUM_MASTER} ]; then
-		new_instance master ${C}
-	elif
-		new_instance worker ${C}
+		new_instance_vm master ${C}
+	else
+		new_instance_vm worker ${C}
 	fi
 done

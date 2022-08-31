@@ -6,6 +6,7 @@
 #set -o pipefail
 
 # copy startup script, always good to have this
+cp ip.sh ~/.
 cp startup.sh ~/.
 cp startup.service /etc/systemd/system/.
 systemctl daemon-reload
