@@ -10,6 +10,13 @@ export SNET_PRIVATE_CIDR=10.0.1.0/24
 export COMP_ID_ROOT=$( oci iam compartment list --compartment-id-in-subtree true --all | jq '.["data"] | .[] | select(."name" == "'${COMP_NAME_ROOT}'") | .id' | sed -e "s/\"//g" )
 
 export NODE_NAME=node
-export NUM_MASTER=1
-export NUM_NODES_VM=3
-export NUM_NODES_BM=1
+export NUM_MASTER_VM=1
+export NUM_WORKER_VM=1
+export NUM_WORKER_BM=1
+
+export SHAPE_NAME_VM="VM.Standard.E4.Flex"
+export SHAPE_NAME_BM="BM.GPU2.2"
+# Ubuntu 20.04 LTS
+export IMAGE_ID=ocid1.image.oc1.iad.aaaaaaaa2zjkrjfmn2qv6mkcupitlf6ittlm7pjap5oi3oppsmtfbgkmxscq
+
+export KUBE_INFRA_LIST=/tmp/kube-infra-list
