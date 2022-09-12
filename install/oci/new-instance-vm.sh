@@ -7,9 +7,9 @@
 # $1: name
 # $2: id
 
-COMP_ID=$( oci iam compartment list --compartment-id-in-subtree true --all | jq '.["data"] | .[] | select(."name" == "'${COMP_NAME}'") | .id' | sed -e "s/\"//g" )
-SBNT_PUBLIC_ID=$(oci network subnet list -c ${COMP_ID} --display-name public | jq '.[] | .[] | .id' | sed -e "s/\"//g" )
-AVAIL_DOMAIN=$( oci iam availability-domain list --compartment-id ${COMP_ID} | jq '.data | .[0] | .name' | sed -e "s/\"//g" )
+COMP_ID=$( oci iam compartment list --compartment-id-in-subtree true --all | jq -r '.["data"] | .[] | select(."name" == "'${COMP_NAME}'") | .id' )
+SBNT_PUBLIC_ID=$(oci network subnet list -c ${COMP_ID} --display-name public | jq -r '.[] | .[] | .id' )
+AVAIL_DOMAIN=$( oci iam availability-domain list --compartment-id ${COMP_ID} | jq -r '.data | .[0] | .name' )
 
 echo "Launching instance ${1}-${2}..."
 INSTANCE_ID=$( oci compute instance launch \
@@ -21,9 +21,9 @@ INSTANCE_ID=$( oci compute instance launch \
 --ssh-authorized-keys-file "/home/sixty9/.ssh/authorized_keys" \
 --subnet-id ${SBNT_PUBLIC_ID} \
 --shape-config file://${1}-shape.json \
---wait-for-state "RUNNING" 2> /dev/null | jq '.data | .id' | sed -e "s/\"//g" )
+--wait-for-state "RUNNING" 2> /dev/null | jq -r '.data | .id' )
 
-PUBLIC_IP=$( oci compute instance list-vnics --instance-id ${INSTANCE_ID} | jq '.data | .[] | ."public-ip"' | sed -e "s/\"//g" )
+PUBLIC_IP=$( oci compute instance list-vnics --instance-id ${INSTANCE_ID} | jq -r '.data | .[] | ."public-ip"' )
 
 # waiting until up&running
 CNX=-1
@@ -39,5 +39,5 @@ ssh -o BatchMode=yes -o StrictHostKeyChecking=no ubuntu@${PUBLIC_IP} "sudo apt-g
 
 echo "New Instance Public IP: ${PUBLIC_IP}"
 
-PRIVATE_IP=$( oci compute instance list-vnics --instance-id ${INSTANCE_ID} | jq '.data | .[] | ."private-ip"' |  sed -e "s/\"//g" )
+PRIVATE_IP=$( oci compute instance list-vnics --instance-id ${INSTANCE_ID} | jq -r '.data | .[] | ."private-ip"' )
 printf "${NODE_NAME}-${2}-${1}\t${PUBLIC_IP}\t${PRIVATE_IP}\n" >> ${KUBE_INFRA_LIST}

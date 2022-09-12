@@ -1,5 +1,7 @@
-export COMP_NAME_ROOT=nvidia_poc
-export COMP_NAME=bricedereims
+#export COMP_NAME_ROOT=nvidia_poc
+export COMP_NAME_ROOT=SPSA
+#export COMP_NAME=bricedereims
+export COMP_NAME=bdereims
 export VCN_NAME=cloudgarage
 export VCN_CIDR=10.0.0.0/20
 export SNET_PUBLIC_NAME=public
@@ -7,7 +9,7 @@ export SNET_PUBLIC_CIDR=10.0.0.0/24
 export SNET_PRIVATE_NAME=private
 export SNET_PRIVATE_CIDR=10.0.1.0/24
 
-export COMP_ID_ROOT=$( oci iam compartment list --compartment-id-in-subtree true --all | jq '.["data"] | .[] | select(."name" == "'${COMP_NAME_ROOT}'") | .id' | sed -e "s/\"//g" )
+export COMP_ID_ROOT=$( oci iam compartment list --compartment-id-in-subtree true --all | jq -r '.["data"] | .[] | select(."name" == "'${COMP_NAME_ROOT}'") | .id' )
 
 export NODE_NAME=node
 export NUM_MASTER_VM=1
@@ -19,4 +21,4 @@ export SHAPE_NAME_BM="BM.GPU2.2"
 # Ubuntu 20.04 LTS
 export IMAGE_ID=ocid1.image.oc1.iad.aaaaaaaa2zjkrjfmn2qv6mkcupitlf6ittlm7pjap5oi3oppsmtfbgkmxscq
 
-export KUBE_INFRA_LIST=/tmp/kube-infra-list
+export KUBE_INFRA_LIST=~/kube-infra-list

@@ -4,10 +4,10 @@
 
 . ./env
 
-COMP_ID=$( oci iam compartment list --compartment-id-in-subtree true --all | jq '.["data"] | .[] | select(."name" == "'${COMP_NAME}'") | .id' | sed -e "s/\"//g" )
-#VCN_ID=$( oci network vcn list -c ${COMP_ID} | jq '.["data"] | .[] | select(."display-name" == "'${VCN_NAME}'") | .id' | sed -e "s/\"//g" ) 
-SBNT_PUBLIC_ID=$(oci network subnet list -c ${COMP_ID} --display-name public | jq '.[] | .[] | .id' | sed -e "s/\"//g" )
-AVAIL_DOMAIN=$( oci iam availability-domain list --compartment-id ${COMP_ID} | jq '.data | .[0] | .name' | sed -e "s/\"//g" )
+COMP_ID=$( oci iam compartment list --compartment-id-in-subtree true --all | jq -r '.["data"] | .[] | select(."name" == "'${COMP_NAME}'") | .id' )
+#VCN_ID=$( oci network vcn list -c ${COMP_ID} | jq -r '.["data"] | .[] | select(."display-name" == "'${VCN_NAME}'") | .id' ) 
+SBNT_PUBLIC_ID=$(oci network subnet list -c ${COMP_ID} --display-name public | jq -r '.[] | .[] | .id' )
+AVAIL_DOMAIN=$( oci iam availability-domain list --compartment-id ${COMP_ID} | jq -r '.data | .[0] | .name' )
 #SHAPE_NAME=$( oci compute shape list --availability-domain "VXpT:US-ASHBURN-AD-1" --compartment-id ${COMP_ID} | jq '.data | [.[] | select(.shape | startswith("VM."))] | .[0] | .shape' )
 SHAPE_NAME="VM.Standard.E3.Flex"
 VM_NAME=sixty9
@@ -25,9 +25,9 @@ INSTANCE_ID=$( oci compute instance launch \
 --ssh-authorized-keys-file "/home/sixty9/.ssh/id_rsa.pub" \
 --subnet-id ${SBNT_PUBLIC_ID} \
 --shape-config file://sixty9-shape.json \
---wait-for-state "RUNNING" 2> /dev/null | jq '.data | .id' | sed -e "s/\"//g" )
+--wait-for-state "RUNNING" 2> /dev/null | jq -r '.data | .id' )
 
-PUBLIC_IP=$( oci compute instance list-vnics --instance-id ${INSTANCE_ID} | jq '.data | .[] | ."public-ip"' | sed -e "s/\"//g" )
+PUBLIC_IP=$( oci compute instance list-vnics --instance-id ${INSTANCE_ID} | jq -r '.data | .[] | ."public-ip"' )
 
 # waiting until up&running
 CNX=-1

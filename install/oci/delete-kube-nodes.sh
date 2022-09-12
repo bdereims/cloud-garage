@@ -4,15 +4,14 @@
 
 . ./env
 
-COMP_ID=$( oci iam compartment list --compartment-id-in-subtree true --all | jq '.["data"] | .[] | select(."name" == "'${COMP_NAME}'") | .id' | sed -e "s/\"//g" )
+COMP_ID=$( oci iam compartment list --compartment-id-in-subtree true --all | jq -r '.["data"] | .[] | select(."name" == "'${COMP_NAME}'") | .id' )
 
-NODES=$( oci compute instance list -c ${COMP_ID} | jq '.data | .[] | select(."lifecycle-state" == "RUNNING") | ."display-name" | select(contains("'${NODE_NAME}'"))' | sed -e "s/\"//g" )
-#NODES="${NODES} $( oci compute instance list -c ${COMP_ID} | jq '.data | .[] | ."display-name" | select(contains("master"))' | sed -e "s/\"//g" )"
+NODES=$( oci compute instance list -c ${COMP_ID} | jq -r '.data | .[] | select(."lifecycle-state" == "RUNNING") | ."display-name" | select(contains("'${NODE_NAME}'"))' )
 ALL_NODES=(${NODES})
 
 for NODE in "${ALL_NODES[@]}"
 do
-	ID=$( oci compute instance list -c ${COMP_ID} | jq '.data | .[] | select(."lifecycle-state" == "RUNNING") | select(."display-name" == "'${NODE}'") | .id' | sed -e "s/\"//g" )
+	ID=$( oci compute instance list -c ${COMP_ID} | jq -r '.data | .[] | select(."lifecycle-state" == "RUNNING") | select(."display-name" == "'${NODE}'") | .id' )
 	echo "${NODE}: ${ID}"
 	oci compute instance terminate --instance-id ${ID} --force
 done
