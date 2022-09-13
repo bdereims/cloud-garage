@@ -27,4 +27,8 @@ oci network route-table update --rt-id ${RTBL_ID} --route-rules '[{"cidrBlock":"
 
 # security list
 SECL_ID=$( oci network security-list list -c ${COMP_ID} | jq -r '.["data"] | .[] | select(."display-name" == "Default Security List for '${VCN_NAME}'") | .id' )
-oci network security-list update --security-list-id ${SECL_ID} --ingress-security-rules '[{"source": "0.0.0.0/0", "protocol": "17", "isStateless": false, "udpOptions": {"destinationPortRange": {"max": 8172, "min": 8172}}}, {"source": "0.0.0.0/0", "protocol": "6", "isStateless": false, "tcpOptions": {"destinationPortRange": {"max": 22, "min": 22}}}]' --force
+oci network security-list update --security-list-id ${SECL_ID} --ingress-security-rules '[{"source": "0.0.0.0/0", "protocol": "17", "isStateless": false, "udpOptions": {"destinationPortRange": {"max": 8172, "min": 8172}}}, {"source": "0.0.0.0/0", "protocol": "6", "isStateless": false, "tcpOptions": {"destinationPortRange": {"max": 22, "min": 22}}}, {"description":"full","icmp-options":null,"is-stateless":false,"protocol":"all","source":"10.0.0.0/16","source-type":"CIDR_BLOCK","tcp-options":null,"udp-options":null}]' --force
+
+# security group
+NSG_ID=$( oci network nsg create -c ${COMP_ID} --vcn-id ${VCN_ID} --display-name "${VCN_NAME}" | jq -r '.["data"] | .id' )
+oci network nsg rules add --nsg-id ${NSG_ID} --security-rules '[{"description":"wireguard","destination":null,"destination-type":null,"direction":"INGRESS","icmp-options":null,"is-stateless":false,"protocol":"17","source":"0.0.0.0/0","source-type":"CIDR_BLOCK","tcp-options":null,"udp-options":{"destination-port-range":{"max":8172,"min":8172},"source-port-range":null}},{"description":"internal flows","destination":null,"destination-type":null,"direction":"INGRESS","icmp-options":null,"is-stateless":false,"protocol":"all","source":"10.0.0.0/16","source-type":"CIDR_BLOCK","tcp-options":null,"udp-options":null}]'
