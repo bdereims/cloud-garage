@@ -40,4 +40,7 @@ ssh -o BatchMode=yes -o StrictHostKeyChecking=no ubuntu@${PUBLIC_IP} "sudo apt-g
 echo "New Instance Public IP: ${PUBLIC_IP}"
 
 PRIVATE_IP=$( oci compute instance list-vnics --instance-id ${INSTANCE_ID} | jq -r '.data | .[] | ."private-ip"' )
-printf "${NODE_NAME}-${2}-${1}\t${PUBLIC_IP}\t${PRIVATE_IP}\n" >> ${KUBE_INFRA_LIST}
+printf "${PRIVATE_IP}\t${NODE_NAME}-${2}-${1}\n${PUBLIC_IP}\t${NODE_NAME}-${2}-${1}-public\n" >> ${KUBE_INFRA_LIST}
+
+echo "${NODE_NAME is finished."
+
