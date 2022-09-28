@@ -9,7 +9,7 @@
 
 COMP_ID=$( oci iam compartment list --compartment-id-in-subtree true --all | jq -r '.["data"] | .[] | select(."name" == "'${COMP_NAME}'") | .id' )
 SBNT_PUBLIC_ID=$(oci network subnet list -c ${COMP_ID} --display-name public | jq -r '.[] | .[] | .id' )
-AVAIL_DOMAIN=$( oci iam availability-domain list --compartment-id ${COMP_ID} | jq -r '.data | .[2] | .name' )
+AVAIL_DOMAIN=$( oci iam availability-domain list --compartment-id ${COMP_ID} | jq -r '.data | .[1] | .name' )
 
 echo "Launching instance ${1}-${2}..."
 INSTANCE_ID=$( oci compute instance launch \
@@ -41,5 +41,5 @@ echo "New Instance Public IP: ${PUBLIC_IP}"
 PRIVATE_IP=$( oci compute instance list-vnics --instance-id ${INSTANCE_ID} | jq -r '.data | .[] | ."private-ip"' )
 printf "${PRIVATE_IP}\t${NODE_NAME}-${2}-${1}\n${PUBLIC_IP}\t${NODE_NAME}-${2}-${1}-public\n" >> ${KUBE_INFRA_LIST}
 
-echo "${NODE_NAME is finished."
+echo "${NODE_NAME}-${2}-${1} is finished."
 
