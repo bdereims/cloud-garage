@@ -1,0 +1,7 @@
+[Interface]
+PrivateKey = xxx
+
+[Peer]
+PublicKey = yyy
+AllowedIPs = 0.0.0.0/0
+Endpoint = 164.132.217.50:8172
